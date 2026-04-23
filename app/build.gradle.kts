@@ -54,6 +54,9 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.bundles.ktor)
+    implementation (libs.androidx.fragment.ktx)
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -72,7 +75,3 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
-
-//kapt {
-//    correctErrorTypes = true
-//}

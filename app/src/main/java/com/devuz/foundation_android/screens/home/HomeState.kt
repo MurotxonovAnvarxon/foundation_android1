@@ -4,9 +4,9 @@ import com.devuz.foundation_android.utils.Status
 import com.devuz.network.models.domain.RootResultCharacter
 
 data class HomeState(
-    var status: Status,
-    var characterList: List<RootResultCharacter>,
-    var errorMessage: String
+    val status: Status = Status.Loading,
+    val characterList: List<RootResultCharacter> = emptyList(),
+    val errorMessage: String = ""
 )
 
 
