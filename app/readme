@@ -1,0 +1,22 @@
+ui-layer / presentation layer
+domain -> optional (for use cases)
+data -> required (repo for business logics)
+core -> utils, readme, (optional for ui components), di, navigation manager
+app -> entrypoint, (recommended write to here di), navigation manager
+
+ui-layer / presentation layer specification
+each screen include:
+1. screen (viewmodel)
+2. viewmodel (repo, manager, service)
+3. contract (events, state, messaging)
+4. ui component (internal)
+
+
+screen specification
+1. viewmodel
+2. event
+3. content ->  HomeScreen / private HomeScreenContent
+4. messaging
+
+contract specification
+1. state -> data class/ many data classes
