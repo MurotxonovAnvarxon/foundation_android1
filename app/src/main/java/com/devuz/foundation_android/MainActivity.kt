@@ -4,9 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.devuz.foundation_android.ui.theme.Foundation_androidTheme
+import com.devuz.foundation_android.ui.theme.RickPrimary
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,10 +23,13 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             Foundation_androidTheme {
-                Scaffold { innerPadding ->
+                Box (
+
+                ){
+//                    innerPadding ->
                     NavigationHost(
                         navController = navController,
-                        innerPadding = innerPadding
+                        innerPadding = PaddingValues()
                     )
                 }
             }

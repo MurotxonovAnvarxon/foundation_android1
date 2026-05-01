@@ -1,7 +1,8 @@
 package com.devuz.network
 
+import DetailResponse
 import android.util.Log
-import com.devuz.network.models.domain.Root
+import com.devuz.network.models.response.home.Root
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -30,26 +31,15 @@ class KtorClient {
             })
         }
     }
-
-    //    suspend fun getCharacters(page: Int) {
-//
-//        try {
-//            val response = client.get("character") {
-//                parameter("page", page)
-//            }
-//
-//            Log.d("TTT", "getCharacters: ${response.body<Root>()}")
-//            return response.body()
-//        } catch (e: Exception) {
-//            return e.message
-//        }
-//    }
+    suspend fun getCharacterById(characterId: Long) : HttpResponse{
+        Log.d("TTT", "getCharacterById: ${characterId}")
+        val response = client.get("character/${characterId}")
+        return response.body()
+    }
     suspend fun getCharacters(page: Int) : HttpResponse{
         val response = client.get("character") {
             parameter("page", page)
         }
-        Log.d("TTT", "getCharacters: ${response.body<Root>()}")
         return response.body()
-
     }
 }

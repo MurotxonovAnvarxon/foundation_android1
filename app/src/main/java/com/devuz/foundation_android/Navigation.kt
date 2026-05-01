@@ -2,41 +2,46 @@ package com.devuz.foundation_android
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.devuz.foundation_android.screens.DetailScreen
+import com.devuz.foundation_android.screens.detail.DetailScreen
 import com.devuz.foundation_android.screens.home.HomeScreen
 import com.devuz.foundation_android.ui.theme.RickPrimary
 
 @Suppress("ParamsComparedByRef")
 @Composable
 fun NavigationHost(
-    navController: NavHostController,
-    innerPadding: PaddingValues
+    navController: NavHostController, innerPadding: PaddingValues
 ) {
     NavHost(
         navController = navController,
         startDestination = "home_screen",
         modifier = Modifier
             .background(color = RickPrimary)
-            .padding(innerPadding)
+            .statusBarsPadding().navigationBarsPadding()
+//            .padding(innerPadding)
     ) {
         composable(route = "home_screen") {
             HomeScreen(
-                onCharacterSelected = { characterId ->
-                    navController.navigate("detail_screen/$characterId")
-                }
-            )
+                onCharacterSelected = { characterId,characterName ->
+                    navController.navigate("detail_screen/$characterId/$characterName")
+                },
+
+                innerPadding = innerPadding)
         }
-        composable(route = "detail_screen/{characterId}") {
+        composable(route = "detail_screen/{characterId}/{characterName}") { backStackEntry ->
+            val characterId: String = backStackEntry.arguments?.getString("characterId") ?: "-1"
+            val characterName: String = backStackEntry.arguments?.getString("characterName") ?: ""
             DetailScreen(
                 onBackClicked = {
                     navController.navigateUp()
-                }
+                }, characterId = characterId.toLong(), characterName = characterName
             )
         }
     }

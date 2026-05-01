@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devuz.foundation_android.ui.theme.RickAction
-import com.devuz.network.models.domain.RootResultCharacter
+import com.devuz.network.models.response.home.RootResultCharacter
 
 @Suppress("ParamsComparedByRef")
 @Composable
@@ -52,7 +52,7 @@ fun CharacterGridItem(
             )
         }
         Text(
-            text = character.name ?: "aaaa",
+            text = character.name ?:"",
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 26.sp,

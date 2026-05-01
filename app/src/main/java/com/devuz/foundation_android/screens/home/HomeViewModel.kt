@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devuz.foundation_android.utils.Status
 import com.devuz.network.KtorClient
-import com.devuz.network.models.domain.Root
+import com.devuz.network.models.response.home.Root
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.call.body
 import kotlinx.coroutines.launch

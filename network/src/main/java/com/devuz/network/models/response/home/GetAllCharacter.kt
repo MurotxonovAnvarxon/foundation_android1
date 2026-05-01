@@ -1,4 +1,4 @@
-package com.devuz.network.models.domain
+package com.devuz.network.models.response.home
 
 import kotlinx.serialization.Serializable
 
