@@ -70,8 +70,6 @@ fun DetailContent(
                 title = { Text(text = characterName, color = RickAction) },
                 actions = {
                     Icon(modifier = Modifier.size(24.dp),tint = RickAction, painter = painterResource(R.drawable.save), contentDescription = "Save")
-
-
                 },
                 navigationIcon = { BackButton(onBackClicked) },
             )
