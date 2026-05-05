@@ -1,7 +1,6 @@
 package com.devuz.foundation_android.screens.detail
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -50,6 +49,7 @@ fun DetailScreen(
 ) {
 
     LaunchedEffect(key1 = Unit, block = {
+        viewModel.getCharacterByIdDao(characterId)
         viewModel.getByIdCharacter(characterId)
     })
     DetailContent(onBackClicked, characterName, viewModel)
@@ -83,13 +83,12 @@ fun DetailContent(
                                 .size(24.dp)
                                 .clickable {
                                     coroutineState.launch {
-                                        viewModel.saveCharacter(state.character!!)
+                                        viewModel.saveButtonOnClick(state.character!!)
                                     }
                                 },
                             tint = RickAction,
-                            painter = painterResource(R.drawable.save),
+                            painter = painterResource(if (state.isDao?:false) R.drawable.save_filled else R.drawable.save),
                             contentDescription = "Save",
-
                             )
                     }
                 },
@@ -108,9 +107,7 @@ fun DetailContent(
 
                 ) {
                     Box(modifier = Modifier.fillMaxWidth()) {
-                        Log.d("VVV", "DetailScreen: ${state.character?.image}")
                         CharacterImage(imageUrl = state.character?.image ?: "")
-
                     }
 
                     Column(modifier = Modifier.padding(top = 10.dp)) {

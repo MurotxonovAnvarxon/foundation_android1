@@ -25,10 +25,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             Foundation_androidTheme {
-                Box (
-
-                ){
-//                    innerPadding ->
+                Box {
                     NavigationHost(
                         navController = navController,
                         innerPadding = PaddingValues()

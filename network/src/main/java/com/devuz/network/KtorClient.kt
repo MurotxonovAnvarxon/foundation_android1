@@ -32,7 +32,6 @@ class KtorClient {
         }
     }
     suspend fun getCharacterById(characterId: Long) : HttpResponse{
-        Log.d("TTT", "getCharacterById: ${characterId}")
         val response = client.get("character/${characterId}")
         return response.body()
     }

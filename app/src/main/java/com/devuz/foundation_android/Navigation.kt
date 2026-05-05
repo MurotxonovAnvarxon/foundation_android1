@@ -1,9 +1,9 @@
 package com.devuz.foundation_android
 
+import SavedScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,16 +24,22 @@ fun NavigationHost(
         startDestination = "home_screen",
         modifier = Modifier
             .background(color = RickPrimary)
-            .statusBarsPadding().navigationBarsPadding()
+            .statusBarsPadding()
+            .navigationBarsPadding()
 //            .padding(innerPadding)
     ) {
         composable(route = "home_screen") {
             HomeScreen(
-                onCharacterSelected = { characterId,characterName ->
+                onCharacterSelected = { characterId, characterName ->
                     navController.navigate("detail_screen/$characterId/$characterName")
                 },
 
-                innerPadding = innerPadding)
+                innerPadding = innerPadding,
+                onNavigateSavedScreen = {
+                    navController.navigate("saved_screen")
+
+                }
+            )
         }
         composable(route = "detail_screen/{characterId}/{characterName}") { backStackEntry ->
             val characterId: String = backStackEntry.arguments?.getString("characterId") ?: "-1"
@@ -42,6 +48,15 @@ fun NavigationHost(
                 onBackClicked = {
                     navController.navigateUp()
                 }, characterId = characterId.toLong(), characterName = characterName
+            )
+        }
+        composable(route = "saved_screen") { backStackEntry ->
+            SavedScreen(
+                onCharacterSelected = { characterId ->
+//                    navController.navigate("detail_screen/$characterId/$characterName")
+                }, onBackClicked = {
+                    navController.navigateUp()
+                }, innerPadding = innerPadding
             )
         }
     }

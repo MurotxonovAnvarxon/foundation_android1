@@ -1,12 +1,13 @@
 package com.devuz.foundation_android.screens.detail
+
 import DetailResponse
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devuz.foundation_android.utils.Status
-import com.devuz.network.KtorClient
 import com.devuz.local.dao.CharacterDao
 import com.devuz.local.model.CharacterEntity
+import com.devuz.network.KtorClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.call.body
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,26 +25,48 @@ class DetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(DetailState())
     var state: StateFlow<DetailState> = _state.asStateFlow()
 
-
     val ktorClient = KtorClient()
 
 
-    suspend fun saveCharacter(character: DetailResponse) {
-        dao.insert(
-            characterEntity = CharacterEntity(
-                id = character.id,
-                characterName = character.name,
-                image = character.image
-            )
-        )
+    suspend fun saveButtonOnClick(character: DetailResponse) {
 
-        getCharacters()
+        if (state.value.isDao) {
+            val result = dao.deleteCharacterById(character.id)
+            _state.update {
+                it.copy(isDao = false)
+            }
+        } else {
+            val result = dao.insert(
+                characterEntity = CharacterEntity(
+                    id = character.id,
+                    characterName = character.name,
+                    image = character.image
+                )
+            )
+            _state.update {
+                it.copy(isDao = true)
+            }
+        }
     }
 
 
-    suspend fun getCharacters(){
-      val list=  dao.getAllCharacterDetails()
-        Log.d("TTT", "getCharacters: $list")
+    suspend fun getCharacterByIdDao(id: Long) {
+
+        try {
+
+            val result = dao.getByIdCharacter(id)
+            _state.update {
+                it.copy(isDao = true)
+            }
+            Log.d("TTT", "getCharacterByIdDao: ${result}")
+        } catch (e: Exception) {
+            Log.d("TTT", "Exception: ${e.message.toString()}")
+            _state.update {
+                it.copy(isDao = false)
+            }
+        }
+
+
     }
 
 

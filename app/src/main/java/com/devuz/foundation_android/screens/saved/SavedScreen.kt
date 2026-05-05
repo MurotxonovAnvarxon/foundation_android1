@@ -1,5 +1,3 @@
-package com.devuz.foundation_android.screens.home
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -17,7 +14,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,13 +23,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.devuz.foundation_android.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devuz.foundation_android.components.CharacterGridItem
+import com.devuz.foundation_android.components.buttons.BackButton
+import com.devuz.foundation_android.screens.saved.SavedViewModel
+import com.devuz.foundation_android.screens.saved.components.CharacterGridItemSaved
 import com.devuz.foundation_android.ui.theme.RickAction
 import com.devuz.foundation_android.ui.theme.RickPrimary
 import com.devuz.foundation_android.utils.Status
@@ -41,61 +39,55 @@ import com.devuz.foundation_android.utils.Status
 
 @Suppress("ParamsComparedByRef")
 @Composable
-fun HomeScreen(
-    onCharacterSelected: (characterId: Long, characterName: String) -> Unit,
-    onNavigateSavedScreen: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel(),
-    innerPadding: PaddingValues
+fun SavedScreen(
+    onCharacterSelected: (characterId: Long) -> Unit,
+    innerPadding: PaddingValues,
+    onBackClicked: () -> Unit,
+    viewModel: SavedViewModel = hiltViewModel(
+
+    )
 ) {
 
     val scrollState = rememberLazyGridState()
 
+
     LaunchedEffect(key1 = Unit, block = {
-        viewModel.getData()
+        viewModel.getCharacters()
     })
 
-    HomeContent(viewModel, scrollState, onCharacterSelected, onNavigateSavedScreen, innerPadding)
+    SavedScreenContent(scrollState, onCharacterSelected, innerPadding, onBackClicked,viewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("ParamsComparedByRef")
 @Composable
-fun HomeContent(
-    viewModel: HomeViewModel,
+fun SavedScreenContent(
     scrollState: LazyGridState,
-    onCharacterSelected: (characterId: Long, characterName: String) -> Unit,
-    onNavigateSavedScreen: () -> Unit,
-    innerPadding: PaddingValues
-) {
-
+    onCharacterSelected: (characterId: Long) -> Unit,
+    innerPadding: PaddingValues,
+    onBackClicked: () -> Unit,
+    viewModel: SavedViewModel
+    ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     Scaffold(
         modifier = Modifier
             .background(color = RickPrimary)
             .statusBarsPadding()
-            .navigationBarsPadding(),
+            .navigationBarsPadding()
+            .padding(horizontal = 12.dp),
         contentColor = RickPrimary,
         containerColor = RickPrimary,
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = RickPrimary),
-                actions = {
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable {
-                                onNavigateSavedScreen()
 
-                            },
-                        tint = RickAction,
-                        painter = painterResource(
-                            R.drawable.save_filled
-                        ),
-                        contentDescription = "Save",
-                    )
-                },
-                title = { Text(text = "Rick and Morty", color = RickAction) }, navigationIcon = { },
-            )
+                title = { Text(text = "Favorites", color = RickAction) },
+                actions = {},
+                navigationIcon = { BackButton(onBackClicked) },
+
+
+                )
         }
     ) { p ->
         p
@@ -108,7 +100,6 @@ fun HomeContent(
                 modifier = Modifier
                     .align(alignment = Alignment.Center)
             ) {
-
                 when (state.status) {
                     Status.Loading -> {
                         CircularProgressIndicator()
@@ -126,11 +117,11 @@ fun HomeContent(
                                 items(
                                     items = state.characterList,
                                 ) { character ->
-                                    CharacterGridItem(
+                                    CharacterGridItemSaved(
                                         modifier = Modifier.clickable {},
-                                        character = character,
+                                        character = character!!,
                                         onClick = {
-                                            onCharacterSelected(character.id ?: 1, character.name ?: "")
+                                            onCharacterSelected(character.id ?: 1,)
                                         })
                                 }
                             }
@@ -143,6 +134,7 @@ fun HomeContent(
 
                     else -> {}
                 }
+
             }
         }
     }
@@ -150,7 +142,7 @@ fun HomeContent(
 
 @Preview
 @Composable
-fun HomePreview() {
-    HomeScreen(onCharacterSelected = { a, b ->
-    }, innerPadding = PaddingValues(0.dp), onNavigateSavedScreen = {})
+fun SavedScreenPreview() {
+    SavedScreen(onCharacterSelected = { a ->
+    }, innerPadding = PaddingValues(0.dp), onBackClicked = {})
 }
