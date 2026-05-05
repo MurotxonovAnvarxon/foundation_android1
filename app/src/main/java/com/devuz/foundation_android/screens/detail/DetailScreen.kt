@@ -3,6 +3,7 @@ package com.devuz.foundation_android.screens.detail
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,12 +31,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devuz.foundation_android.R
 import com.devuz.foundation_android.components.CharacterImage
 import com.devuz.foundation_android.components.buttons.BackButton
 import com.devuz.foundation_android.ui.theme.RickAction
 import com.devuz.foundation_android.ui.theme.RickPrimary
 import com.devuz.foundation_android.utils.Status
+import kotlinx.coroutines.launch
 
 @Suppress("ParamsComparedByRef")
 @Composable
@@ -58,6 +63,9 @@ fun DetailContent(
     onBackClicked: () -> Unit,
     characterName: String, viewModel: DetailViewModel
 ) {
+    val coroutineState = rememberCoroutineScope()
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         modifier = Modifier
             .background(color = RickPrimary)
@@ -69,7 +77,21 @@ fun DetailContent(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = RickPrimary),
                 title = { Text(text = characterName, color = RickAction) },
                 actions = {
-                    Icon(modifier = Modifier.size(24.dp),tint = RickAction, painter = painterResource(R.drawable.save), contentDescription = "Save")
+                    Box {
+                        Icon(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clickable {
+                                    coroutineState.launch {
+                                        viewModel.saveCharacter(state.character!!)
+                                    }
+                                },
+                            tint = RickAction,
+                            painter = painterResource(R.drawable.save),
+                            contentDescription = "Save",
+
+                            )
+                    }
                 },
                 navigationIcon = { BackButton(onBackClicked) },
             )
@@ -79,15 +101,15 @@ fun DetailContent(
                 .padding(top = 76.dp)
                 .fillMaxSize()
         ) {
-            when (viewModel.state.status) {
+            when (state.status) {
                 Status.Loading -> CircularProgressIndicator(modifier = Modifier.align(alignment = Alignment.Center))
                 Status.Success -> Column(
                     modifier = Modifier.verticalScroll(rememberScrollState())
 
                 ) {
                     Box(modifier = Modifier.fillMaxWidth()) {
-                        Log.d("VVV", "DetailScreen: ${viewModel.state.character?.image}")
-                        CharacterImage(imageUrl = viewModel.state.character?.image ?: "")
+                        Log.d("VVV", "DetailScreen: ${state.character?.image}")
+                        CharacterImage(imageUrl = state.character?.image ?: "")
 
                     }
 
@@ -96,25 +118,25 @@ fun DetailContent(
                         Row {
                             var color = Color.Yellow
 
-                            when (viewModel.state.character?.status) {
+                            when (state.character?.status) {
                                 "Alive" -> color = Color.Green
                                 "Dead" -> color = Color.Red
                                 "Unknown" -> color = Color.Yellow
                             }
 
                             Text(text = "Status:", color = RickAction)
-                            Text(text = viewModel.state.character?.status ?: "", color = color)
+                            Text(text = state.character?.status ?: "", color = color)
                         }
 
-                        Text(text = "Location: ${viewModel.state.character?.location?.name ?: ""}", color = RickAction)
-                        Text(text = "Species: ${viewModel.state.character?.species ?: ""}", color = RickAction)
-                        Text(text = "Gender: ${viewModel.state.character?.gender ?: ""}", color = RickAction)
-                        Text(text = "Origin: ${viewModel.state.character?.origin?.name ?: ""}", color = RickAction)
-                        Text(text = "Created: ${viewModel.state.character?.created ?: ""}", color = RickAction)
+                        Text(text = "Location: ${state.character?.location?.name ?: ""}", color = RickAction)
+                        Text(text = "Species: ${state.character?.species ?: ""}", color = RickAction)
+                        Text(text = "Gender: ${state.character?.gender ?: ""}", color = RickAction)
+                        Text(text = "Origin: ${state.character?.origin?.name ?: ""}", color = RickAction)
+                        Text(text = "Created: ${state.character?.created ?: ""}", color = RickAction)
                     }
                 }
 
-                Status.Error -> Text(viewModel.state.errorMessage)
+                Status.Error -> Text(state.errorMessage)
 
                 else -> {}
             }

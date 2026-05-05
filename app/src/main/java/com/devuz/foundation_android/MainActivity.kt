@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.devuz.foundation_android.ui.theme.Foundation_androidTheme
 import com.devuz.foundation_android.ui.theme.RickPrimary
+import com.devuz.local.database.CharacterDatabase
+import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -23,11 +23,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devuz.foundation_android.components.CharacterGridItem
 import com.devuz.foundation_android.ui.theme.RickAction
 import com.devuz.foundation_android.ui.theme.RickPrimary
@@ -60,6 +62,8 @@ fun HomeContent(
     onCharacterSelected: (characterId: Long, characterName: String) -> Unit,
     innerPadding: PaddingValues
 ) {
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         modifier = Modifier
             .background(color = RickPrimary)
@@ -85,7 +89,7 @@ fun HomeContent(
                     .align(alignment = Alignment.Center)
             ) {
 
-                when (viewModel.uiState.status) {
+                when (state.status) {
                     Status.Loading -> {
                         CircularProgressIndicator()
                     }
@@ -100,7 +104,7 @@ fun HomeContent(
                             columns = GridCells.Fixed(2),
                             content = {
                                 items(
-                                    items = viewModel.uiState.characterList,
+                                    items = state.characterList,
                                 ) { character ->
                                     CharacterGridItem(
                                         modifier = Modifier.clickable {},
@@ -114,7 +118,7 @@ fun HomeContent(
                     }
 
                     Status.Error -> {
-                        Text(viewModel.uiState.errorMessage)
+                        Text(state.errorMessage)
                     }
 
                     else -> {}

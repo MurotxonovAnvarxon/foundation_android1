@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "foundation_android"
 include(":app")
 include(":network")
-
+include(":local")

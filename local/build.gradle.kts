@@ -1,22 +1,20 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id("com.android.library")
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlinAndroidKsp)
-
-
 }
-
 android {
-    namespace = "com.devuz.foundation_android"
-    compileSdk = 36
+    namespace = "com.devuz.local"
+    compileSdk {
+        version = release(36) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
-        applicationId = "com.devuz.foundation_android"
         minSdk = 26
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -25,41 +23,36 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-    }
 
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
     buildFeatures {
         compose = true
-        dataBinding = true
     }
+
 }
 
 dependencies {
-    //modules
-    implementation(project(":network"))
-    implementation(project(":local"))
 
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
+    //room
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
 
-    implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 
-    // Image loading
-    implementation(libs.coil.compose)
+    implementation (libs.gson)
+
+    implementation(libs.bundles.ktor)
+
 
     // Dependency injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(libs.bundles.ktor)
-    implementation (libs.androidx.fragment.ktx)
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
-
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -69,7 +62,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.transport.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
