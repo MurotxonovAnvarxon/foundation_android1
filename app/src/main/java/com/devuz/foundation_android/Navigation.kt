@@ -26,7 +26,6 @@ fun NavigationHost(
             .background(color = RickPrimary)
             .statusBarsPadding()
             .navigationBarsPadding()
-//            .padding(innerPadding)
     ) {
         composable(route = "home_screen") {
             HomeScreen(
