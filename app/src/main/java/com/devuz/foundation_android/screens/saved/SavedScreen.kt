@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -74,8 +75,7 @@ fun SavedScreenContent(
         modifier = Modifier
             .background(color = RickPrimary)
             .statusBarsPadding()
-            .navigationBarsPadding()
-            .padding(horizontal = 12.dp),
+            .navigationBarsPadding(),
         contentColor = RickPrimary,
         containerColor = RickPrimary,
         topBar = {
@@ -130,6 +130,11 @@ fun SavedScreenContent(
 
                     Status.Error -> {
                         Text(state.errorMessage)
+                    }
+                    Status.Empty -> {
+                        Box (modifier = Modifier.align(alignment = Alignment.Center)){
+                            Text("Empty", color = Color.White)
+                        }
                     }
 
                     else -> {}
